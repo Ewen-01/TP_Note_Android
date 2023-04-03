@@ -2,14 +2,13 @@ package com.iut.app.android.tp5_reseau_android.model;
 
 import android.util.Log;
 
-import com.iut.app.android.tp5_reseau_android.StationClass;
+import com.iut.app.android.tp5_reseau_android.MainActivity;
 import com.iut.app.android.tp5_reseau_android.fuel.FuelResponse;
-import com.iut.app.android.tp5_reseau_android.fuel.FuelStation;
-import com.iut.app.android.tp5_reseau_android.fuel.FuelStationDataSet;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import okhttp3.Cache;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,34 +16,25 @@ import retrofit2.Response;
 public class MainActivityController {
 
     private final ApiManager apiManager;
+    Map<String,String> parameters;
 
-    public MainActivityController() {
+    public MainActivityController(int offset) {
         apiManager = ApiManager.getInstance();
+        parameters = new HashMap<>();
+        parameters.put("rows", String.valueOf(MainActivity.ROWS));
+        parameters.put("dataset", "station-service");
+        parameters.put("start", String.valueOf(offset));
     }
 
-    public void getNameStationResponse(FuelStationCallBack callBack, ArrayList<StationClass> listStation) {
-        Call<FuelResponse> callTimeParis = apiManager.getFuelService().getFuelResponse();
+    public void getNameStationResponse(FuelStationCallBack callBack) {
+        Call<FuelResponse> callTimeParis = apiManager.getFuelService().getFuelData(20, "");
         callTimeParis.enqueue(new Callback<FuelResponse>() {
             @Override
             public void onResponse(Call<FuelResponse> call, Response<FuelResponse> response) {
                 if (response.isSuccessful()) {
-                    FuelResponse c = response.body();
-                    for(int y = 0; y < c.getRecords().size(); y++){
-                        Log.e("onResponse", c.getRecords().get(y).getFields().getName());
-                        listStation.get(y).setNom(c.getRecords().get(y).getFields().getName());
-                        listStation.get(y).setVille(c.getRecords().get(y).getFields().getCity());
-                        listStation.get(y).setGeoPosition(c.getRecords().get(y).getFields().getGeoPoint());
-                        listStation.get(y).setNom(c.getRecords().get(y).getFields().getName());
-                        listStation.get(y).setP95(String.valueOf(c.getRecords().get(y).getFields().getPriceSp95()));
-                        listStation.get(y).setPgazole(String.valueOf(c.getRecords().get(y).getFields().getPriceGazole()));
-                        listStation.get(y).setPe85(String.valueOf(c.getRecords().get(y).getFields().getPriceE85()));
-                        listStation.get(y).setPe10(String.valueOf(c.getRecords().get(y).getFields().getPriceE10()));
-
-                    }
-                    callBack.getTimeResponseSuccess(listStation);
-
-
-
+                    FuelResponse fuelResponse = response.body();
+                    CacheManager.getInstance().setFuelResponse(fuelResponse);
+                    callBack.getTimeResponseSuccess(fuelResponse);
                 } else {
                     Log.e("onResponse", "Not successfull : " + response.code());
                     callBack.getTimeResponseError("Erreur le serveur a repondu status : " + response.code());
@@ -59,45 +49,4 @@ public class MainActivityController {
         });
 
     }
-
-    public void getNameStationResponseThread(FuelStationCallBack callBack, ArrayList<StationClass> listStation) {
-
-
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response<FuelResponse> response = apiManager.getFuelService().getFuelData(20, "").execute();
-                    if (response.isSuccessful()) {
-                        FuelResponse c = response.body();
-                        for(int y = 0; y < c.getRecords().size(); y++){
-                            Log.e("onResponse", c.getRecords().get(y).getFields().getName());
-                            listStation.get(y).setNom(c.getRecords().get(y).getFields().getName());
-                            listStation.get(y).setVille(c.getRecords().get(y).getFields().getCity());
-                            listStation.get(y).setGeoPosition(c.getRecords().get(y).getFields().getGeoPoint());
-                            listStation.get(y).setNom(c.getRecords().get(y).getFields().getName());
-                            listStation.get(y).setP95(String.valueOf(c.getRecords().get(y).getFields().getPriceSp95()));
-                            listStation.get(y).setPgazole(String.valueOf(c.getRecords().get(y).getFields().getPriceGazole()));
-                            listStation.get(y).setPe85(String.valueOf(c.getRecords().get(y).getFields().getPriceE85()));
-                            listStation.get(y).setPe10(String.valueOf(c.getRecords().get(y).getFields().getPriceE10()));
-
-                        }
-
-                        callBack.getTimeResponseSuccess(listStation);
-                    } else {
-                        Log.e("onResponse", "Not successfull : " + response.code());
-                        callBack.getTimeResponseError("Erreur le serveur a repondu status : " + response.code());
-                    }
-
-                } catch (IOException e) {
-                    Log.e("onResponse", "Not successfull : " + e.getLocalizedMessage());
-                    callBack.getTimeResponseError("Erreur lors de la requete : " + e.getLocalizedMessage());
-                }
-
-            }
-        };
-
-        new Thread(r).start();
-    }
-
 }

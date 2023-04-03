@@ -1,5 +1,6 @@
 package com.iut.app.android.tp5_reseau_android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,52 +10,84 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.iut.app.android.tp5_reseau_android.fuel.FuelResponse;
+import com.iut.app.android.tp5_reseau_android.fuel.FuelStation;
+import com.iut.app.android.tp5_reseau_android.fuel.FuelStationDataSet;
+import com.iut.app.android.tp5_reseau_android.model.CacheManager;
 
-public class FuelStationAdapter extends RecyclerView.Adapter<FuelStationAdapter.MyViewHolder>{
+import java.util.List;
+
+public class FuelStationAdapter extends RecyclerView.Adapter<FuelStationAdapter.ViewHolder> {
 
     Context context;
-    ArrayList<StationClass> listStation;
+    FuelResponse fuelResponse;
+    List<FuelStationDataSet> recordList;
 
-    public FuelStationAdapter(Context context, ArrayList<StationClass> listStation) {
+    CacheManager cacheManager;
 
-        this.context = context;
-        this.listStation = listStation;
+    public FuelStationAdapter(FuelResponse fuelResponse) {
+
+        this.fuelResponse = fuelResponse;
+        recordList = fuelResponse.getRecords();
+        cacheManager = CacheManager.getInstance();
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.card_item,parent, false);
-        return new MyViewHolder(v);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.card_item, parent, false);
+
+        return new FuelStationAdapter.ViewHolder(view);
     }
 
+
+
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        StationClass stations = listStation.get(position);
-        holder.station_name.setText(stations.nom);
-        holder.station_location.setText(stations.Ville);
-        holder.station_price.setText("  SP95 : " + stations.p95 + "  e10 : " + stations.pe10 + "  e85 : "+ stations.pe85 + "  Gazole : " + stations.pGazole);
+    public void onBindViewHolder(@NonNull FuelStationAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        FuelStation fuelStation;
+        if(position<0){
+            fuelStation = recordList.get(0).getFields();
+        }
+        else{
+            fuelStation = recordList.get(position).getFields();
+        }
+
+        holder.station_name.setText(fuelStation.getName());
+        holder.station_location.setText(fuelStation.getCity());
+        holder.station_price.setText("SP95 :" + fuelStation.getPriceSp95() + " E10 :" + fuelStation.getPriceE10() + " Gazole :" + fuelStation.getPriceGazole() + " E85 :" + fuelStation.getPriceE85());
+
+
+        /*
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(view.getContext(), CarpoolAreaDetail.class);
+                i.putExtra(CarpoolAreaDetail.DATA, (Serializable) itemField);
+                holder.itemView.getContext().startActivity(i);
+
+            }
+        });
+         */
     }
 
     @Override
     public int getItemCount() {
-        if(listStation == null){
-            return 0;
-        }
-        else{
-            return listStation.size();
-        }
-
+        return recordList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public void setRecordList(List<FuelStationDataSet> recordList) {
+        this.recordList = recordList;
+    }
 
-        TextView station_name;
-        TextView station_location;
-        TextView station_price;
 
-        public MyViewHolder(@NonNull View itemView) {
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView station_name, station_location, station_price;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             station_name = itemView.findViewById(R.id.station_name);
             station_location = itemView.findViewById(R.id.station_location);

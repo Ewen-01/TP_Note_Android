@@ -1,12 +1,6 @@
 package com.iut.app.android.tp5_reseau_android.model;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.iut.app.android.tp5_reseau_android.service.FuelService;
 
@@ -35,8 +29,6 @@ public class ApiManager {
 
         return instance;
     }
-
-    private FuelStationCallBack getFuelStationCallBack(){ return fuelStationCallBack; }
 
     private ApiManager() {
         createRetrofitFuel();

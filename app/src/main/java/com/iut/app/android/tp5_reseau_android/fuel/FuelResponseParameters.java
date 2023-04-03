@@ -1,11 +1,16 @@
 package com.iut.app.android.tp5_reseau_android.fuel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class FuelResponseParameters {
+public class FuelResponseParameters implements Parcelable {
 
     @SerializedName("dataset")
     @Expose
@@ -30,6 +35,27 @@ public class FuelResponseParameters {
     @SerializedName("timezone")
     @Expose
     private String timezone;
+
+    protected FuelResponseParameters(Parcel in) {
+        dataset = in.readString();
+        rows = in.readInt();
+        start = in.readInt();
+        sort = in.createStringArrayList();
+        format = in.readString();
+        timezone = in.readString();
+    }
+
+    public static final Creator<FuelResponseParameters> CREATOR = new Creator<FuelResponseParameters>() {
+        @Override
+        public FuelResponseParameters createFromParcel(Parcel in) {
+            return new FuelResponseParameters(in);
+        }
+
+        @Override
+        public FuelResponseParameters[] newArray(int size) {
+            return new FuelResponseParameters[size];
+        }
+    };
 
     public String getDataset() {
         return dataset;
@@ -79,4 +105,18 @@ public class FuelResponseParameters {
         this.timezone = timezone;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(dataset);
+        dest.writeInt(rows);
+        dest.writeInt(start);
+        dest.writeStringList(sort);
+        dest.writeString(format);
+        dest.writeString(timezone);
+    }
 }

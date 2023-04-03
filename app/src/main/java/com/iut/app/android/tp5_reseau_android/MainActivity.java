@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FuelService fuelService = null;
     private DrawerLayout drawerLayout;
 
-    private MainActivityController mainActivityController = new MainActivityController();
+    public static int ROWS = 10;
+
 
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
@@ -139,25 +140,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    @Override
-    public void getTimeResponseSuccess(ArrayList<StationClass> list) {
-
-    }
 
     @Override
-    public void getTimeResponseError(String message) {
-
-    }
-
-    /*
-    private void getFuelResponse(){
-        mainActivityController.getFuelResponse(this);
-    }
-
-
-
-    @Override
-    public void getTimeResponseSuccess(FuelStation station) {
+    public void getTimeResponseSuccess(FuelResponse fuelResponse) {
 
     }
 
@@ -165,6 +150,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void getTimeResponseError(String message) {
 
     }
-
-     */
 }

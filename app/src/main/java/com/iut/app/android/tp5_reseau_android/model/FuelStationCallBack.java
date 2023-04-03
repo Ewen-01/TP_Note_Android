@@ -8,6 +8,6 @@ import java.util.ArrayList;
 
 public interface FuelStationCallBack {
 
-    void getTimeResponseSuccess(ArrayList<StationClass> list);
+    void getTimeResponseSuccess(FuelResponse fuelResponse);
     void getTimeResponseError(String message);
 }
