@@ -20,17 +20,14 @@ public class MainActivityController {
 
     public MainActivityController(int offset) {
         apiManager = ApiManager.getInstance();
-        /*
         parameters = new HashMap<>();
         parameters.put("rows", String.valueOf(MainActivity.ROWS));
-        parameters.put("dataset", "station-service");
+        parameters.put("dataset", "prix_des_carburants_j_7");
         parameters.put("start", String.valueOf(offset));
-
-         */
     }
 
     public void getNameStationResponse(FuelStationCallBack callBack) {
-        Call<FuelResponse> callTimeParis = apiManager.getFuelService().getFuelData(20, "");
+        Call<FuelResponse> callTimeParis = apiManager.getFuelService().getFuelResponse2(parameters);
         callTimeParis.enqueue(new Callback<FuelResponse>() {
             @Override
             public void onResponse(Call<FuelResponse> call, Response<FuelResponse> response) {

@@ -14,6 +14,9 @@ import com.google.gson.GsonBuilder;
 import com.iut.app.android.tp5_reseau_android.fuel.FuelResponse;
 import com.iut.app.android.tp5_reseau_android.service.FuelService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,8 +54,12 @@ public class RequeteAPI {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         FuelService service = retrofit.create(FuelService.class);
+        Map<String, String> parametreQuery = new HashMap<String, String>();
+        parametreQuery.put("rows", String.valueOf(row_number));
+        parametreQuery.put("dataset", "prix_des_carburants_j_7");
+        parametreQuery.put("start", String.valueOf(offset));
 
-        service.getFuelData(20, "").enqueue(new Callback<FuelResponse>() {
+        service.getFuelResponse2(parametreQuery).enqueue(new Callback<FuelResponse>() {
             @Override
             public void onResponse(Call<FuelResponse> call, Response<FuelResponse> response) {
                 if (response.isSuccessful()) {

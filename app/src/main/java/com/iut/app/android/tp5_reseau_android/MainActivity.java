@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mainActivity = this;
         mainController = new MainController();
 
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_home);
         }
+        navigationFragment = new NavigationFragment();
 
 
         //getFuelResponse();
@@ -104,11 +107,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_liste:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ListeFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listeFragment).commit();
                 break;
 
             case R.id.nav_navigation:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NavigationFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, navigationFragment).commit();
                 break;
         }
 
@@ -146,11 +149,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void getFuelResponseSuccess(FuelResponse data) {
                 fuelResponse = data;
                 Toast.makeText(getApplicationContext(), "API request Successful !", Toast.LENGTH_LONG).show();
-                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listeFragment).commit();
 
-                Bundle carpoolAreaFragmentBundle = new Bundle();
-                carpoolAreaFragmentBundle.putParcelable(FUEL_STATION_KEY, data);
-                listeFragment.setArguments(carpoolAreaFragmentBundle);
+                listeFragment = ListeFragment.newInstance(data);
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listeFragment).commit();
+
+                Bundle listeFragmentBundle = new Bundle();
+                listeFragmentBundle.putParcelable(FUEL_STATION_KEY, data);
+                listeFragment.setArguments(listeFragmentBundle);
 
                 Bundle mapsFragmentBundle = new Bundle();
                 mapsFragmentBundle.putParcelable(FUEL_STATION_KEY, data);

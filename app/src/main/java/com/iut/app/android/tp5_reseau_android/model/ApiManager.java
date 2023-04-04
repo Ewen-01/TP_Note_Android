@@ -10,7 +10,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager {
-    final static String BASE_URL = "https://public.opendatasoft.com/api/records/1.0/search/";
+    final static String BASE_URL = "https://public.opendatasoft.com/";
 
     private FuelService fuelService = null;
 

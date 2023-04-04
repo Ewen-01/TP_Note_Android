@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.iut.app.android.tp5_reseau_android.fuel.FuelResponse;
 import com.iut.app.android.tp5_reseau_android.fuel.FuelStation;
 import com.iut.app.android.tp5_reseau_android.fuel.FuelStationDataSet;
+import com.iut.app.android.tp5_reseau_android.model.CacheManager;
 
 import java.util.List;
 
@@ -33,10 +34,13 @@ public class NavigationFragment extends Fragment {
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-
+            fuelresponse = CacheManager.getInstance().getFuelResponse();
+            /*
             if (getArguments() != null) {
                 userLoc = getArguments().getParcelable(MainActivity.USER_LOCATION_KEY);
             }
+
+             */
             pointsMap(googleMap);
         }
     };
