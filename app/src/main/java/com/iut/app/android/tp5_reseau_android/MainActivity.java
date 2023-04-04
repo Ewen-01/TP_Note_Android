@@ -174,25 +174,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    /*
-    private void createRetrofitFuelResponse(){
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.level(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-
-
-        Retrofit retrofitFuelResponse = new Retrofit.Builder()
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        fuelService = retrofitFuelResponse.create(FuelService.class);
-    }
-
-     */
-
-
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
 

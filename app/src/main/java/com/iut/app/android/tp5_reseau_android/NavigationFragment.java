@@ -73,8 +73,11 @@ public class NavigationFragment extends Fragment {
 
         for (FuelStationDataSet record : recordList) {
             List<Float> coord = record.getFields().getGeoPoint();
-            LatLng pin = new LatLng(coord.get(0), coord.get(1));
-            map.addMarker(new MarkerOptions().position(pin).title(record.getFields().getCity()));
+            if(coord != null){
+                LatLng pin = new LatLng(coord.get(0), coord.get(1));
+                map.addMarker(new MarkerOptions().position(pin).title(record.getFields().getCity()));
+            }
+
         }
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override

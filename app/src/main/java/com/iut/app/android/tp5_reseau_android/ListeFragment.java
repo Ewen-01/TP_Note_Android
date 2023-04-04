@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import com.iut.app.android.tp5_reseau_android.Utility.EndRecyclerViewScrollListener;
@@ -79,7 +80,7 @@ public class ListeFragment extends Fragment {
 
         adapter = new FuelStationAdapter(fuelResponse);
 
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) View listVide = view.findViewById(R.id.iv_liste_vide);
+        //ImageView listVide = (ImageView) view.findViewById(R.id.iv_liste_vide);
 
         recyclerview = view.findViewById(R.id.recyclerview);
         recyclerview.setAdapter(adapter);
@@ -104,13 +105,14 @@ public class ListeFragment extends Fragment {
 
                 if(records.isEmpty()){
                     Log.e("onTextChanged()", "recordList is empty");
-                    listVide.setVisibility(View.VISIBLE);
+
+                    //listVide.setVisibility(View.VISIBLE);
                     recyclerview.setVisibility(View.GONE);
                 }else{
                     //adapter.recordList.clear();
                     adapter.setRecordList(records);
                     adapter.notifyDataSetChanged();
-                    listVide.setVisibility(View.GONE);
+                    //listVide.setVisibility(View.GONE);
                     recyclerview.setVisibility(View.VISIBLE);
                 }
                 lastSearch = s;
