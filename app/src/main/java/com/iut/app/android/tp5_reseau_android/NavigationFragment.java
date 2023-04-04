@@ -4,34 +4,40 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.iut.app.android.tp5_reseau_android.fuel.FuelResponse;
+import com.iut.app.android.tp5_reseau_android.fuel.FuelStation;
+import com.iut.app.android.tp5_reseau_android.fuel.FuelStationDataSet;
+
+import java.util.List;
 
 public class NavigationFragment extends Fragment {
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    FuelResponse fuelresponse;
+    LatLng userLoc = new LatLng(0,0);
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
+    private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
 
+            if (getArguments() != null) {
+                userLoc = getArguments().getParcelable(MainActivity.USER_LOCATION_KEY);
+            }
+            pointsMap(googleMap);
         }
     };
 
@@ -51,5 +57,34 @@ public class NavigationFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+    }
+
+
+    public void pointsMap(GoogleMap map) {
+        List<FuelStationDataSet> recordList = fuelresponse.getRecords();
+
+        LatLng origin = userLoc;
+        map.moveCamera(CameraUpdateFactory.newLatLng(origin));
+        posPoints(origin,map);
+
+        for (FuelStationDataSet record : recordList) {
+            List<Float> coord = record.getFields().getGeoPoint();
+            LatLng pin = new LatLng(coord.get(0), coord.get(1));
+            map.addMarker(new MarkerOptions().position(pin).title(record.getFields().getCity()));
+        }
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                Toast.makeText(getContext(),"Clicked on " + marker.getTitle(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void posPoints(LatLng position, GoogleMap map) {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(position)
+                .zoom(7.0f).build();
+
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 }

@@ -8,7 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.iut.app.android.tp5_reseau_android.fuel.FuelResponse;
+
 public class MapFragment extends Fragment {
+
+    FuelResponse fuelResponse;
+    LatLng userLoc = new LatLng(0,0);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

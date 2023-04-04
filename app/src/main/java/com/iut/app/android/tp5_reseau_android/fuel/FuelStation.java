@@ -3,9 +3,10 @@ package com.iut.app.android.tp5_reseau_android.fuel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class FuelStation {
+public class FuelStation implements Serializable {
 
     @SerializedName("geo_point")
     @Expose

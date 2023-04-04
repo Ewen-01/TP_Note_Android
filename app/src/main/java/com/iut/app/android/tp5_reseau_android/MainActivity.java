@@ -1,5 +1,7 @@
 package com.iut.app.android.tp5_reseau_android;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,9 +14,13 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
 import com.iut.app.android.tp5_reseau_android.Utility.NetworkChangeListener;
 import com.iut.app.android.tp5_reseau_android.fuel.FuelResponse;
@@ -37,11 +43,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     FuelService fuelService = null;
     private DrawerLayout drawerLayout;
-
+    public final static String USER_LOCATION_KEY = "USER_LOCATION_KEY";
     public static int ROWS = 10;
-
-
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    public final static String FUEL_STATION_KEY = "FUEL_STATION_KEY";
+
+    FuelResponse fuelResponse;
+    ListeFragment listeFragment;
+    NavigationFragment navigationFragment;
+
+    LatLng userLoc;
+
+    MainActivity mainActivity;
+    MainController mainController;
+
 
 
     @Override
@@ -49,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        mainActivity = this;
+        mainController = new MainController();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,7 +85,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_home);
         }
 
+
         //getFuelResponse();
+
+
+
+        getApiData();
+        drawerLayout.closeDrawer(GravityCompat.START);
 
 
     }
@@ -113,6 +137,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStop() {
         unregisterReceiver(networkChangeListener);
         super.onStop();
+    }
+
+
+    public void getApiData(){
+        mainController.getFuelResponse(new FuelStationCallBackTwo() {
+            @Override
+            public void getFuelResponseSuccess(FuelResponse data) {
+                fuelResponse = data;
+                Toast.makeText(getApplicationContext(), "API request Successful !", Toast.LENGTH_LONG).show();
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listeFragment).commit();
+
+                Bundle carpoolAreaFragmentBundle = new Bundle();
+                carpoolAreaFragmentBundle.putParcelable(FUEL_STATION_KEY, data);
+                listeFragment.setArguments(carpoolAreaFragmentBundle);
+
+                Bundle mapsFragmentBundle = new Bundle();
+                mapsFragmentBundle.putParcelable(FUEL_STATION_KEY, data);
+                mapsFragmentBundle.putParcelable(USER_LOCATION_KEY, userLoc);
+
+                navigationFragment.setArguments(mapsFragmentBundle);
+
+            }
+
+            @Override
+            public void getFuelResponseError(String error) {
+                Log.e("getCarpoolAreaResponseError", error);
+            }
+        });
     }
 
 

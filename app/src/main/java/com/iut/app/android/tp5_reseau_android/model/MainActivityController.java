@@ -20,10 +20,13 @@ public class MainActivityController {
 
     public MainActivityController(int offset) {
         apiManager = ApiManager.getInstance();
+        /*
         parameters = new HashMap<>();
         parameters.put("rows", String.valueOf(MainActivity.ROWS));
         parameters.put("dataset", "station-service");
         parameters.put("start", String.valueOf(offset));
+
+         */
     }
 
     public void getNameStationResponse(FuelStationCallBack callBack) {
@@ -33,7 +36,7 @@ public class MainActivityController {
             public void onResponse(Call<FuelResponse> call, Response<FuelResponse> response) {
                 if (response.isSuccessful()) {
                     FuelResponse fuelResponse = response.body();
-                    CacheManager.getInstance().setFuelResponse(fuelResponse);
+                    //CacheManager.getInstance().setFuelResponse(fuelResponse);
                     callBack.getTimeResponseSuccess(fuelResponse);
                 } else {
                     Log.e("onResponse", "Not successfull : " + response.code());

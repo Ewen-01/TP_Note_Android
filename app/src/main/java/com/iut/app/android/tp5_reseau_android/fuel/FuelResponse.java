@@ -62,7 +62,7 @@ public class FuelResponse implements Parcelable {
         this.fuelResponseParameters = fuelResponseParameters;
     }
 
-    public List<FuelStationDataSet> getRecords() {
+    public ObservableArrayList<FuelStationDataSet> getRecords() {
         return fuelStationDataSets;
     }
 

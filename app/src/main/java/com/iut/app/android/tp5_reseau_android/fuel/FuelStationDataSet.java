@@ -95,8 +95,10 @@ public class FuelStationDataSet implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(datasetId);
-        dest.writeString(recordId);
+        dest.writeString(this.datasetId);
+        dest.writeString(this.recordId);
+        dest.writeSerializable(fuelStation);
+        dest.writeSerializable(fuelStationCoordinates);
         dest.writeString(recordTimestamp);
     }
 }

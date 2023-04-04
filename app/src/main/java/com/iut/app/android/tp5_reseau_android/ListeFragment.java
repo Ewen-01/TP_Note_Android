@@ -118,7 +118,7 @@ public class ListeFragment extends Fragment {
             }
         });
 
-        ObservableArrayList<FuelStationDataSet> records = (ObservableArrayList<FuelStationDataSet>) CacheManager.getInstance().getFuelResponse().getRecords();
+        ObservableArrayList<FuelStationDataSet> records =CacheManager.getInstance().getFuelResponse().getRecords();
 
         records.addOnListChangedCallback(new ObservableList.OnListChangedCallback() {
             @Override
@@ -150,43 +150,13 @@ public class ListeFragment extends Fragment {
         return view;
     }
 
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-        //getNameStationResponse();
-
-        recyclerview = view.findViewById(R.id.recyclerview);
-        recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerview.setHasFixedSize(true);
-        //FuelStationAdapter fuelStationAdapter = new FuelStationAdapter(getContext(), listStation);
-        //recyclerview.setAdapter(fuelStationAdapter);
-        //fuelStationAdapter.notifyDataSetChanged();
-
-
-    }
-
-    /*
-    public void getTimeResponseSuccess(FuelStation station){
-        listStation = new ArrayList<>();
-
-        String nom = station.getName(), p95 = String.valueOf(station.getPriceSp95()), pe10 = String.valueOf(station.getPriceE10()), pGazole = String.valueOf(station.getPriceGazole()), pe85 = String.valueOf(station.getPriceE85()), Ville = station.getCity();
-
-        StationClass station1 = new StationClass(nom, p95, pe10, pGazole, pe85, Ville);
-
-        listStation.add(station1);
-    }
-     */
-
     public void loadNextDataFromAPI(int page){
         int offset = page * MainActivity.ROWS;
         mainActivityController = new MainActivityController(offset);
         mainActivityController.getNameStationResponse(new FuelStationCallBack() {
             @Override
-            public void getTimeResponseSuccess(FuelResponse fuelResponse) {
-                fuelResponse.append(fuelResponse, false);
+            public void getTimeResponseSuccess(FuelResponse fuelResponses) {
+                fuelResponse.append(fuelResponses, false);
                 adapter.notifyDataSetChanged();
             }
 

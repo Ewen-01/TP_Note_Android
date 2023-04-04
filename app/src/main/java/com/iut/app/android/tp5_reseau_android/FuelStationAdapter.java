@@ -19,16 +19,15 @@ import java.util.List;
 
 public class FuelStationAdapter extends RecyclerView.Adapter<FuelStationAdapter.ViewHolder> {
 
-    Context context;
     FuelResponse fuelResponse;
     List<FuelStationDataSet> recordList;
 
     CacheManager cacheManager;
 
-    public FuelStationAdapter(FuelResponse fuelResponse) {
+    public FuelStationAdapter(FuelResponse fuelResponses) {
 
-        this.fuelResponse = fuelResponse;
-        recordList = fuelResponse.getRecords();
+        fuelResponse = fuelResponses;
+        recordList = fuelResponses.getRecords();
         cacheManager = CacheManager.getInstance();
     }
 
